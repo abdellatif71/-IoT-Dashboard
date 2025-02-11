@@ -8,7 +8,6 @@ const io = socketIo(server);
 
 let data = [];
 
-// Simulate real-time data generation
 setInterval(() => {
   const newData = {
     time: new Date().toLocaleTimeString(),
