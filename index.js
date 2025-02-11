@@ -16,7 +16,7 @@ setInterval(() => {
     humidity: Math.floor(Math.random() * 50) + 30     // Random humidity between 30-80%
   };
   data.push(newData);
-  if (data.length > 10) data.shift();  // Keep last 10 records
+  if (data.length > 10) data.shift(); 
   io.emit('updateData', data);
 }, 2000);
 
