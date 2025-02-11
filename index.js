@@ -1,23 +1,40 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
+import express from 'express';
+import http from 'http';
+import { Server as socketIo } from 'socket.io'; // Hier angepasst
+import axios from 'axios'; // Importiere Axios
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = new socketIo(server); // Socket.io initialisieren
 
 let data = [];
 
-setInterval(() => {
-  const newData = {
-    time: new Date().toLocaleTimeString(),
-    temperature: Math.floor(Math.random() * 30) + 10,  
-    humidity: Math.floor(Math.random() * 50) + 30     
-  };
-  data.push(newData);
-  if (data.length > 10) data.shift(); 
-  io.emit('updateData', data);
-}, 2000);
+// Dein API-Schlüssel für WeatherAPI.com
+const API_KEY = '24f93fa2e3c9426cbb0182915251102';
+const LOCATION = 'Paris'; // Du kannst die Location nach Belieben ändern
+
+async function fetchWeatherData() {
+  try {
+    // Ersetze fetch durch Axios
+    const response = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${LOCATION}`);
+    const weatherData = response.data;
+    
+    const newData = {
+      time: new Date().toLocaleTimeString(),
+      temperature: weatherData.current.temp_c, 
+      humidity: weatherData.current.humidity  
+    };
+
+    data.push(newData);
+    if (data.length > 10) data.shift(); 
+    io.emit('updateData', data);
+  } catch (error) {
+    console.error('Fehler beim Abrufen der Wetterdaten:', error);
+  }
+}
+
+
+setInterval(fetchWeatherData, 2000);
 
 app.get('/', (req, res) => {
   res.send(`
