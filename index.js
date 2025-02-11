@@ -12,7 +12,7 @@ let data = [];
 setInterval(() => {
   const newData = {
     time: new Date().toLocaleTimeString(),
-    temperature: Math.floor(Math.random() * 30) + 10,  // Random temperature between 10-40°C
+    temperature: Math.floor(Math.random() * 30) + 10,  
     humidity: Math.floor(Math.random() * 50) + 30     // Random humidity between 30-80%
   };
   data.push(newData);
